@@ -13,35 +13,17 @@ def mkdo(name:str, bin_dir:str=None):
     bin_dir = bin_dir or dirname(subprocess.check_output(['which', this_name]).decode())
     bin_name = join(bin_dir, name)
 
-    if name=='.wrapper':
-        for fname in os.listdir(bin_dir):
-            if fname=='.wrapper':
-                continue
+    if exists(bin_name):
+        os.unlink(bin_name)
 
-            if islink(join(bin_dir, fname)):
-                if basename(os.readlink(join(bin_dir, fname))) == '.wrapper':
-                    print(mkdo(fname, bin_dir))
+    src = 'python3s -m `basename "$0"` $@\n'
 
-            else:
-                if os.stat(join(bin_dir, fname)).st_size < 34:
-                    # update to python3s instead of python
-                    with open(join(bin_dir, fname)) as f:
-                        s = f.read()
-                    if s.startswith('python3 -m `basename "$0"` $@'):
-                        print(mkdo(fname, bin_dir))
-    else:
+    with open(bin_name, 'w') as f:
+        f.write(src)
 
-        if exists(bin_name):
-            os.unlink(bin_name)
+    os.chmod(bin_name, 0o755)
 
-        src = 'python3s -m `basename "$0"` $@\n'
-
-        with open(bin_name, 'w') as f:
-            f.write(src)
-
-        os.chmod(bin_name, 0o755)
-
-        return bin_name
+    return bin_name
 
 def main():
     parser = argparse.ArgumentParser(prog=this_name, description=__doc__)

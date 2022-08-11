@@ -1,5 +1,5 @@
 '''
-Infinite Monkey Cage
+Stringbreak
 
 A small collection of monky-patch hacks that let you do things you aren't supposed to do.
 
