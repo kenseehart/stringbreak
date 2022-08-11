@@ -16,7 +16,7 @@ def mkdo(name:str, bin_dir:str=None):
     if exists(bin_name):
         os.unlink(bin_name)
 
-    src = 'python3s -m `basename "$0"` $@\n'
+    src = 'python3 -m `basename "$0"` $@\n'
 
     with open(bin_name, 'w') as f:
         f.write(src)
